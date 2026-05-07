@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${recipe.title}">Recipe</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar('my-recipes')}"></div>
+
+<main class="page recipe-detail-modern">
+
+    <a href="/" class="detail-back-link">← Back to recipes</a>
+
+    <section class="detail-hero">
+        <!-- LEFT: IMAGE -->
+        <div class="detail-hero-image-card">
+            <img th:src="@{'/images/' + ${#strings.toLowerCase(recipe.category.name())} + '.jpg'}"
+                 alt="Recipe image"
+                 class="detail-hero-image">
+        </div>
+
+        <!-- RIGHT: SUMMARY -->
+        <div class="detail-hero-summary">
+            <span class="badge"
+                  th:classappend="${' badge-' + #strings.toLowerCase(recipe.category.name())}"
+                  th:text="${recipe.category.displayName}">
+                Category
+            </span>
+
+            <h1 class="detail-hero-title" th:text="${recipe.title}">Recipe title</h1>
+
+            <div class="detail-meta-row">
+                <span class="meta-item">
+                    <i data-lucide="user" class="icon icon-sm"></i>
+                    <span th:text="${recipe.author.username}">author</span>
+                </span>
+
+                <span class="meta-item">
+                    <i data-lucide="calendar-days" class="icon icon-sm"></i>
+                    <span th:text="${#temporals.format(recipe.createdAt, 'dd. M. yyyy')}">date</span>
+                </span>
+            </div>
+
+            <div class="detail-utility-actions">
+                <button type="button" class="detail-pill-button"><i data-lucide="heart" class="icon"></i> Save</button>
+                <button type="button" class="detail-pill-button"><i data-lucide="share-2" class="icon"></i> Share</button>
+            </div>
+
+            <div class="detail-author-box" th:if="${#authentication.name == recipe.author.email}">
+                <p class="detail-author-box-label">Author actions</p>
+
+                <div class="detail-author-actions">
+                    <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}"
+                       class="detail-action-btn detail-action-btn-edit">
+                        <i data-lucide="pencil" class="icon"></i> Edit
+                    </a>
+
+                    <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}"
+                          method="post">
+                        <input type="hidden"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+                        <button type="submit"
+                                class="detail-action-btn detail-action-btn-delete">
+                            <i data-lucide="trash-2" class="icon"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="detail-content-grid">
+        <!-- Ingredients -->
+        <aside class="detail-info-card detail-ingredients-card">
+            <h2>Ingredients</h2>
+            <p class="detail-card-subtitle">For your recipe</p>
+
+            <ul class="ingredients-list">
+                <li th:each="ingredient : ${ingredients}"
+                    th:text="${ingredient}">
+                    Ingredient
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Instructions -->
+        <section class="detail-info-card detail-instructions-card">
+            <h2>Instructions</h2>
+
+            <ol class="steps-list">
+                <li th:each="step, stat : ${instructionSteps}"
+                    class="step-item">
+
+                    <div class="step-number" th:text="${stat.count}">1</div>
+                    <div class="step-text" th:text="${step}">Step text</div>
+                </li>
+            </ol>
+        </section>
+    </section>
+
+</main>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

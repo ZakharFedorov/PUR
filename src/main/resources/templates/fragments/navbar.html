@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+
+<nav th:fragment="navbar(activePage)" class="navbar">
+    <div class="navbar-inner page">
+
+        <a href="/" class="brand">
+            <div class="brand-icon">
+                <i data-lucide="chef-hat" class="icon"></i>
+            </div>
+            <div>
+                <div class="brand-title">Recipe Manager</div>
+                <div class="brand-subtitle">Cookbook</div>
+            </div>
+        </a>
+
+        <div class="nav-center">
+            <a href="/"
+               class="nav-pill"
+               th:classappend="${activePage == 'recipes'} ? ' active'">
+                All recipes
+            </a>
+
+            <a href="/my-recipes"
+               class="nav-pill"
+               th:classappend="${activePage == 'my-recipes'} ? ' active'">
+                My recipes
+            </a>
+
+            <a href="/recipes/new"
+               class="nav-pill nav-add"
+               th:classappend="${activePage == 'new-recipe'} ? ' active'">
+                <span>＋</span>
+                Add recipe
+            </a>
+        </div>
+
+        <div class="nav-user">
+            <div class="user-badge">
+                <div class="user-icon">
+                    <i data-lucide="user" class="icon"></i>
+                </div>
+                <span th:text="${#authentication.principal.user.username}">username</span>
+            </div>
+
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}">
+                <button type="submit" class="logout-link logout-button">
+                    Log Out
+                </button>
+            </form>
+        </div>
+
+    </div>
+</nav>
+
+</body>
+</html>

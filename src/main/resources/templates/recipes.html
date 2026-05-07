@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar('recipes')}"></div>
+
+<main>
+    <section class="recipes-hero-section">
+        <div class="page">
+            <section class="hero">
+                <div>
+                    <div class="eyebrow eyebrow-plain">Your personal online cookbook</div>
+                    <h1 class="hero-title">Recipe <span>Manager</span></h1>
+                    <p class="hero-text">
+                        Collect, share and discover recipes from home kitchens. Everything is saved in one warm and simple place.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" href="/recipes/new">Add recipe</a>
+                        <a class="btn btn-secondary" href="/my-recipes">My recipes</a>
+                    </div>
+                </div>
+
+                <div th:if="${recipeOfTheDay != null}" class="hero-feature-card">
+
+                    <a th:href="@{'/recipes/' + ${recipeOfTheDay.id}}"
+                       class="hero-feature-image-wrap">
+
+                        <img class="hero-feature-image"
+                             th:src="@{'/images/' + ${#strings.toLowerCase(recipeOfTheDay.category.name())} + '.jpg'}"
+                             alt="Recipe image">
+                    </a>
+
+                    <a th:href="@{'/recipes/' + ${recipeOfTheDay.id}}"
+                       class="hero-feature-floating-card">
+
+                        <div class="hero-feature-icon">
+                            <i data-lucide="sparkles" class="icon"></i>
+                        </div>
+
+                        <div>
+                            <p class="hero-feature-label">Recipe of the day</p>
+                            <h2 th:text="${recipeOfTheDay.title}">Recipe title</h2>
+                        </div>
+                    </a>
+
+                </div>
+
+                <div th:if="${recipeOfTheDay == null}" class="hero-card">
+                    <div class="hero-card-content">
+                        <span class="badge">Recipe of the day</span>
+                        <h2 style="margin-top:12px;">No recipes yet</h2>
+                        <p class="section-subtitle">Add your first recipe to show it here.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section class="recipes-content-section">
+        <div class="page">
+            <section class="section-header all-recipes-header">
+                <div>
+                    <div class="eyebrow eyebrow-plain">Public database</div>
+                    <h2 class="section-title">All recipes</h2>
+                    <p class="section-subtitle">Browse recipes created by all users.</p>
+                </div>
+            </section>
+
+            <section class="filter-card">
+                <form class="filter-form" method="get" action="/">
+
+                    <div class="filter-search-row">
+                        <div class="filter-search">
+                            <span class="filter-search-icon">
+                                <i data-lucide="search" class="icon"></i>
+                            </span>
+                            <label>
+                                <input type="text"
+                                       name="q"
+                                       placeholder="Search recipes by title"
+                                       th:value="${searchQuery}">
+                            </label>
+                        </div>
+
+                        <button type="submit" class="filter-button">Search</button>
+                    </div>
+
+                    <div class="category-row">
+                        <a class="category-chip"
+                           th:classappend="${selectedCategory == null} ? ' active'"
+                           th:href="@{/}">
+                            All
+                        </a>
+
+                        <a th:each="category : ${categories}"
+                           class="category-chip"
+                           th:classappend="${selectedCategory == category} ? ' active'"
+                           th:href="@{/(q=${searchQuery}, category=${category})}"
+                           th:text="${category.displayName}">
+                            Category
+                        </a>
+                    </div>
+
+                </form>
+            </section>
+
+            <div class="empty-card" th:if="${recipes.isEmpty()}">No recipes found.</div>
+
+            <section class="recipe-grid" th:if="${!recipes.isEmpty()}">
+                <article th:each="recipe : ${recipes}" class="recipe-card recipe-image-card">
+
+                    <a th:href="@{'/recipes/' + ${recipe.id}}" class="recipe-card-image">
+                        <img th:src="@{'/images/' + ${#strings.toLowerCase(recipe.category.name())} + '.jpg'}"
+                             alt="Recipe image">
+                    </a>
+
+                    <div class="recipe-card-content">
+                        <span class="badge"
+                              th:classappend="${' badge-' + #strings.toLowerCase(recipe.category.name())}"
+                              th:text="${recipe.category.displayName}">
+                            Category
+                        </span>
+
+                        <h3>
+                            <a th:href="@{'/recipes/' + ${recipe.id}}"
+                               th:text="${recipe.title}">
+                                Recipe title
+                            </a>
+                        </h3>
+
+                        <p class="recipe-preview"
+                           th:text="${#strings.abbreviate(recipe.ingredientsPreview, 90)}">
+                            Recipe ingredients preview
+                        </p>
+
+                        <div class="recipe-card-footer">
+                            <span class="meta-item">
+                                <i data-lucide="user" class="icon icon-sm"></i>
+                                <span th:text="${recipe.author.username}">author</span>
+                            </span>
+
+                            <span class="meta-item">
+                                <i data-lucide="calendar-days" class="icon icon-sm"></i>
+                                <span th:text="${#temporals.format(recipe.createdAt, 'dd. MM. yyyy')}">date</span>
+                            </span>
+                        </div>
+                    </div>
+
+                </article>
+            </section>
+        </div>
+    </section>
+</main>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

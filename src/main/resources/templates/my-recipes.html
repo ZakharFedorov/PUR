@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Recipes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar('my-recipes')}"></div>
+
+<main class="page my-recipes-page">
+
+    <section class="my-recipes-header">
+        <div>
+            <p class="eyebrow eyebrow-plain">Your kitchen</p>
+            <h1 class="my-recipes-title">My Recipes</h1>
+            <p class="my-recipes-subtitle">Manage recipes created by you.</p>
+        </div>
+
+        <div class="my-recipes-actions">
+            <a href="/recipes/new" class="btn btn-primary">+ Add recipe</a>
+        </div>
+    </section>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div class="stat-icon stat-icon-red">
+                <i data-lucide="book-open" class="icon icon-lg"></i>
+            </div>
+            <div>
+                <p class="stat-label">Total recipes</p>
+                <p class="stat-value" th:text="${totalRecipes}">0</p>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon stat-icon-green">
+                <i data-lucide="chef-hat" class="icon icon-lg"></i>
+            </div>
+            <div>
+                <p class="stat-label">Categories</p>
+                <p class="stat-value" th:text="${categoryCount}">0</p>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon stat-icon-orange">
+                <i data-lucide="plus" class="icon icon-lg"></i>
+            </div>
+            <div>
+                <p class="stat-label">This month</p>
+                <p class="stat-value" th:text="${recipesThisMonth}">0</p>
+            </div>
+        </article>
+    </section>
+
+    <section class="recipes-table-card" th:if="${!recipes.isEmpty()}">
+        <table class="recipes-table">
+            <thead>
+            <tr>
+                <th>Recipe</th>
+                <th>Category</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="recipe : ${recipes}">
+                <td>
+                    <a th:href="@{'/recipes/' + ${recipe.id}}" class="table-recipe">
+                        <div class="table-recipe-image">
+                            <img th:src="@{'/images/' + ${#strings.toLowerCase(recipe.category.name())} + '.jpg'}"
+                                 alt="Recipe image">
+                        </div>
+                        <div>
+                            <strong th:text="${recipe.title}">Recipe title</strong>
+                            <span th:text="${#strings.abbreviate(recipe.ingredients, 55)}">
+                                Ingredients preview
+                            </span>
+                        </div>
+                    </a>
+                </td>
+
+                <td>
+                    <span class="table-badge"
+                          th:classappend="${' badge-' + #strings.toLowerCase(recipe.category.name())}"
+                          th:text="${recipe.category.displayName}">
+                        Category
+                    </span>
+                </td>
+
+                <td>
+                    <span th:if="${recipe.createdAt != null}"
+                          th:text="${#temporals.format(recipe.createdAt, 'dd.MM.yyyy')}">
+                        Date
+                    </span>
+                    <span th:if="${recipe.createdAt == null}">—</span>
+                </td>
+
+                <td>
+                    <div class="table-actions">
+                        <a th:href="@{'/recipes/' + ${recipe.id} + '/edit'}"
+                           class="table-icon-button"
+                           title="Edit">
+                            <i data-lucide="pencil" class="icon"></i>
+                        </a>
+
+                        <form th:action="@{'/recipes/' + ${recipe.id} + '/delete'}"
+                              method="post">
+                            <input type="hidden"
+                                   th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}">
+                            <button type="submit"
+                                    class="table-icon-button delete-icon"
+                                    title="Delete">
+                                <i data-lucide="trash-2" class="icon"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="empty-card my-empty-state" th:if="${recipes.isEmpty()}">
+        <h2>No recipes yet</h2>
+        <p>You have not created any recipes yet. Add your first recipe to see it here.</p>
+        <a href="/recipes/new" class="btn btn-primary">+ Add recipe</a>
+    </section>
+
+</main>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

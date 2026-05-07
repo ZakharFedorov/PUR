@@ -1,0 +1,159 @@
+@media (max-width: 1000px) {
+    .detail-hero,
+    .detail-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-hero-image-card,
+    .detail-hero-image {
+        min-height: 360px;
+    }
+}
+
+@media (max-width: 900px) {
+    .page {
+        width: min(100% - 48px, 1200px);
+    }
+
+    .navbar-inner {
+        grid-template-columns: 1fr;
+        padding: 16px 0;
+    }
+
+    .nav-center,
+    .nav-user {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-feature-card {
+        min-height: auto;
+        padding-bottom: 70px;
+    }
+
+    .hero-feature-image-wrap {
+        height: 300px;
+    }
+
+    .hero-feature-floating-card {
+        left: 24px;
+        right: 24px;
+        bottom: 20px;
+        width: auto;
+    }
+
+    .recipe-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .my-recipes-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recipes-table-card {
+        overflow-x: auto;
+    }
+
+    .recipes-table {
+        min-width: 820px;
+    }
+
+    .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-side {
+        min-height: 430px;
+        padding: 34px;
+    }
+
+    .auth-form-side {
+        padding: 42px 24px;
+    }
+
+    .auth-side-content h1 {
+        font-size: 3.2rem;
+    }
+}
+
+@media (max-width: 760px) {
+    .filter-search-row {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-button {
+        width: 100%;
+    }
+
+    .category-row {
+        align-items: stretch;
+    }
+
+    .category-chip {
+        flex: 1 1 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .page {
+        width: min(100% - 24px, 1200px);
+    }
+
+    .nav-link,
+    .btn,
+    button {
+        width: 100%;
+    }
+
+    .hero {
+        padding-top: 42px;
+    }
+
+    .recipe-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recipe-detail-modern {
+        padding: 36px 0 60px;
+    }
+
+    .detail-info-card {
+        padding: 24px;
+    }
+
+    .detail-hero-title {
+        font-size: 3rem;
+    }
+
+    .detail-info-card h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .auth-side {
+        padding: 26px;
+    }
+
+    .auth-side-content p {
+        font-size: 1.05rem;
+    }
+
+    .auth-cooks {
+        flex-wrap: wrap;
+        row-gap: 12px;
+    }
+
+    .auth-form-card h2 {
+        font-size: 2.5rem;
+    }
+}

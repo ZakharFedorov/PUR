@@ -1,0 +1,8 @@
+@import url('./base.css');
+@import url('./buttons-forms.css');
+@import url('./navbar.css');
+@import url('./auth.css');
+@import url('./recipes.css');
+@import url('./recipe-detail.css');
+@import url('./my-recipes.css');
+@import url('./responsive.css');

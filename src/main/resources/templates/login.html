@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Recipe Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-body">
+
+<main class="auth-shell">
+
+    <section class="auth-side">
+        <a href="/login" class="auth-brand">
+            <div class="auth-brand-icon">
+                <i data-lucide="chef-hat" class="icon"></i>
+            </div>
+            <div>
+                <div class="auth-brand-title">Recipe Manager</div>
+                <div class="auth-brand-subtitle">Cookbook</div>
+            </div>
+        </a>
+
+        <div class="auth-side-content">
+            <h1>Welcome back to the kitchen.</h1>
+            <p>Continue collecting your favorite recipes and sharing them with the world.</p>
+
+            <div class="auth-cooks">
+                <div class="cook-avatar">M</div>
+                <div class="cook-avatar">P</div>
+                <div class="cook-avatar">J</div>
+                <span>+ many other cooks</span>
+            </div>
+        </div>
+
+        <p class="auth-copyright">© 2026 Recipe Manager</p>
+    </section>
+
+    <section class="auth-form-side">
+        <div class="auth-form-card">
+            <h2>Login</h2>
+            <p class="auth-form-subtitle">Enter your details to access your recipe collection.</p>
+
+            <p th:if="${param.error}" class="auth-error">
+                Invalid email or password.
+            </p>
+
+            <p th:if="${param.logout}" class="auth-success">
+                You have been logged out.
+            </p>
+
+            <form method="post" action="/login" class="auth-form">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}">
+                <div class="auth-field">
+                    <label for="email">Email</label>
+                    <div class="auth-input-wrap">
+                        <span class="auth-input-icon">
+                            <i data-lucide="mail" class="icon"></i>
+                        </span>
+                        <input id="email"
+                               type="email"
+                               name="username"
+                               placeholder="example@email.com"
+                               required>
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <div class="auth-label-row">
+                        <label for="password">Password</label>
+                    </div>
+
+                    <div class="auth-input-wrap">
+                        <span class="auth-input-icon">
+                            <i data-lucide="lock" class="icon"></i>
+                        </span>
+                        <input id="password"
+                               type="password"
+                               name="password"
+                               placeholder="••••••••"
+                               required
+                               minlength="4">
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Login <span>→</span>
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                New here?
+                <a href="/register">Create account</a>
+            </p>
+        </div>
+    </section>
+
+</main>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>
