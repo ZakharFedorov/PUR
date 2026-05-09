@@ -35,37 +35,46 @@ jobs:
 
       - name: Upload Docker images and compose file
         run: |
-          scp -6 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          scp -6 -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=no \
             recipe-manager-images.tar.gz debian@[${{ secrets.SERVER_HOST }}]:~/
 
-          ssh -6 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          ssh -6 -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=no \
             debian@${{ secrets.SERVER_HOST }} "mkdir -p ~/recipe-manager"
 
-          scp -6 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          scp -6 -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=no \
             docker-compose.yml debian@[${{ secrets.SERVER_HOST }}]:~/recipe-manager/
 
       - name: Deploy on server
         run: |
-          ssh -6 -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no debian@${{ secrets.SERVER_HOST }} << 'EOF'
-            set -e
+          ssh -6 -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=no \
+            debian@${{ secrets.SERVER_HOST }} << 'EOF'
+          set -e
 
-            gunzip -c ~/recipe-manager-images.tar.gz | docker load
+          gunzip -c ~/recipe-manager-images.tar.gz | docker load
 
-            cd ~/recipe-manager
+          cd ~/recipe-manager
 
-            cat > .env << ENVEOF
-            POSTGRES_DB=recipe_manager
-            POSTGRES_USER=postgres
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          printf '%s\n' \
+            'POSTGRES_DB=recipe_manager' \
+            'POSTGRES_USER=postgres' \
+            'POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' \
+            '' \
+            'SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/recipe_manager' \
+            'SPRING_DATASOURCE_USERNAME=postgres' \
+            'SPRING_DATASOURCE_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' \
+            'SPRING_JPA_HIBERNATE_DDL_AUTO=update' \
+            > .env
 
-            SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/recipe_manager
-            SPRING_DATASOURCE_USERNAME=postgres
-            SPRING_DATASOURCE_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            SPRING_JPA_HIBERNATE_DDL_AUTO=update
-            ENVEOF
+          docker compose down
+          docker compose up -d --no-build --force-recreate
 
-            docker compose down
-            docker compose up -d --no-build
-
-            rm ~/recipe-manager-images.tar.gz
+          rm -f ~/recipe-manager-images.tar.gz
           EOF
