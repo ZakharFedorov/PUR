@@ -13,7 +13,7 @@ services:
       - recipe-network
 
   app:
-    build: .
+    image: recipe-manager-app:latest
     container_name: recipe-manager-app
     restart: unless-stopped
     depends_on:
