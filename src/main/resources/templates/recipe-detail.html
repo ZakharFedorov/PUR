@@ -14,14 +14,12 @@
     <a href="/" class="detail-back-link">← Back to recipes</a>
 
     <section class="detail-hero">
-        <!-- LEFT: IMAGE -->
         <div class="detail-hero-image-card">
             <img th:src="@{'/images/' + ${#strings.toLowerCase(recipe.category.name())} + '.jpg'}"
                  alt="Recipe image"
                  class="detail-hero-image">
         </div>
 
-        <!-- RIGHT: SUMMARY -->
         <div class="detail-hero-summary">
             <span class="badge"
                   th:classappend="${' badge-' + #strings.toLowerCase(recipe.category.name())}"
@@ -73,7 +71,6 @@
     </section>
 
     <section class="detail-content-grid">
-        <!-- Ingredients -->
         <aside class="detail-info-card detail-ingredients-card">
             <h2>Ingredients</h2>
             <p class="detail-card-subtitle">For your recipe</p>
@@ -86,7 +83,6 @@
             </ul>
         </aside>
 
-        <!-- Instructions -->
         <section class="detail-info-card detail-instructions-card">
             <h2>Instructions</h2>
 
